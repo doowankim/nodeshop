@@ -1,6 +1,7 @@
-const express = require('express');
+const express = require('express');  //const: 상수, var: 변수
 const app = express();
 const http = require('http');
+const morgan = require('morgan');
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
 
@@ -10,7 +11,7 @@ const orderRoutes = require('./api/routes/orders');
 //   });
 // });
 
-
+// app.use(morgan('dev'));
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
 
