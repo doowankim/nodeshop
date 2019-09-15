@@ -2,6 +2,7 @@ const express = require('express');  //const: 상수, var: 변수
 const app = express();
 const http = require('http');
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
 
@@ -11,7 +12,9 @@ const orderRoutes = require('./api/routes/orders');
 //   });
 // });
 
-// app.use(morgan('dev'));
+app.use(morgan('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false})); //bodyparseR 사용자 입력값을 쉽게 만들어주는 것
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
 
