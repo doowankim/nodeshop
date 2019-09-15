@@ -11,8 +11,16 @@ router.get('/', (req, res) => { //=>진행하겠다는 뜻
 
 // create
 router.post('/', (req, res) => {
+
+    const product = {
+        name2: req.body.name,
+        price2: req.body.price
+    };
+
+
     res.status(200).json({
-        msg: 'Successful post products'
+        msg: 'Successful post products',
+        createdProduct: product
     });
 });
 

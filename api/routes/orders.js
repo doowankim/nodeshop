@@ -14,8 +14,13 @@ router.get('/',(req, res) =>{
 
 // create
 router.post('/',(req, res) =>{
+    const order = {
+        name:req.body.product,  
+        quenty:req.body.ea
+    };
     res.status(200).json({
-        message: 'Successful post order'
+        message: 'Successful post order',
+        createdOrder: order
     });
 });
 
