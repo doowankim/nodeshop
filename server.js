@@ -12,7 +12,7 @@ const orderRoutes = require('./api/routes/orders');
 
 
 const db = 'mongodb://teddykwak:k9915402@ds141294.mlab.com:41294/node-rest-shop';
-// const db = 'mongodb+srv://doowankim:enzhd1313#@cluster0-m6o3g.mongodb.net/test?retryWrites=true&w=majority';
+//const db = 'mongodb+srv://doowankim:enzhd1313@cluster0-m6o3g.mongodb.net/test?retryWrites=true&w=majority';
 
 mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => console.log("MongoDB Connected..."))//성공했을 경우
