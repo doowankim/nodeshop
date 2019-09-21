@@ -103,10 +103,25 @@ router.patch('/', (req, res) => {
 });
 
 //delete
-router.delete('/', (req, res) => {
-    res.status(200).json({
-        msg: 'Successful delete products'
-    });
+router.delete('/:productId', (req, res) => {
+    productModel
+        .remove({
+            _id: req.params.productId
+        })
+        .then(result => {
+            res.status(200).json({
+                msg: 'Successful product delete'
+            });
+        })
+        .catch(err => {
+            res.json({
+                error: err
+            });
+        });
+
+    // res.status(200).json({
+    //     msg: 'Successful delete products'
+    // });
 });
 
 
