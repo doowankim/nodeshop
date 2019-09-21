@@ -6,4 +6,4 @@ const productSchema = mongoose.Schema({
     price: String
 });
 
-module.exports = mongoose.model("Product", productSchema); //model이 가장 최상위
+module.exports = mongoose.model("Product", productSchema); //model이 가장 최상위, mlab에서 뜨는건 products라고 뜸

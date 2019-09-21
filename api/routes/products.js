@@ -4,14 +4,29 @@ const router = express.Router();
 const productModel = require('../models/product'); //../(..cd)와 ./(같은레벨의 파일)
 
 
-// read
+// read(2)
 router.get('/', (req, res) => { //=>진행하겠다는 뜻
-   res.status(200).json({
-       message: 'Handling GET requests to /products'
-   });
+    productModel
+        .find()
+        .then(docs => {
+            res.status(200).json({
+                msg: 'Successful total data',
+                productCount: docs.length,
+                products: docs
+            });
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            });
+        });
+
+   // res.status(200).json({
+   //     message: 'Handling GET requests to /products'
+   // });
 });
 
-// create
+// create(1)
 router.post('/', (req, res) => {
 
     const product = new productModel({
@@ -20,7 +35,7 @@ router.post('/', (req, res) => {
     });
 
     product
-        .save()
+        .save() //만든 데이터를 저장
         .then(result => {
             res.status(200).json({
                 msg: 'Created product',
