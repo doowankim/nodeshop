@@ -12,7 +12,16 @@ router.get('/', (req, res) => { //=>진행하겠다는 뜻
             res.status(200).json({
                 msg: 'Successful total data',
                 productCount: docs.length,
-                products: docs
+                products: docs.map(doc => { //상세내용 클릭한 후 자세히보기
+                    return{
+                        name: doc.name,
+                        _id: doc._id, //name, price, id중에 name, id만 보이는 것
+                        request: { //상세페이지로 가는 것
+                            type: "GET",
+                            url: "http://localhost:3000/products/" +doc._id
+                        }
+                    }
+                })
             });
         })
         .catch(err => {
@@ -36,7 +45,15 @@ router.get('/:productId', (req,res) => { //: 사용자 요청에 의한 ProductI
             if(doc.length > 0){ //doc에 데이터가 있다면 실행
                 res.status(200).json({
                     msg: 'Successful detail data',
-                    productInfo: doc
+                    productInfo: {
+                        name: doc.name,
+                        price: doc.price,
+                        _id: doc._id,
+                        request: { //상세페이지랑 전체페이지 왔다갔다하는 것을 자동화 시킨것
+                            type: 'GET',
+                            url: "http://localhost:3000/products/"
+                        }
+                    }
                 });
 
 
@@ -74,7 +91,15 @@ router.post('/', (req, res) => {
         .then(result => {
             res.status(200).json({
                 msg: 'Created product',
-                createdProduct: result
+                createdProduct: {
+                    name: result.name,
+                    price: result.price,
+                    _id: result._id,
+                    request: {
+                        type: 'GET',
+                        url: "http://localhost:3000/products/" +result._id
+                    }
+                }
             }); //화면에 뿌려주는 것
         }) //성공했을경우 실행
         .catch(err => {
@@ -110,7 +135,11 @@ router.patch('/:productId', (req, res) => {
         .update({_id: id}, { $set: updateOps}) //$set에 updataops값을 넣어주는것
         .then( result => {
             res.status(200).json({
-                msg: 'Successful update data'
+                msg: 'Successful update data',
+                request: {
+                    type: 'GET',
+                    url: "http://localhost:3000/products/" +id
+                }
             });
         })
         .catch(err => {
@@ -133,7 +162,12 @@ router.delete('/:productId', (req, res) => {
         })
         .then(result => {
             res.status(200).json({
-                msg: 'Successful product delete'
+                msg: 'Successful product delete',
+                request: {
+                    type: 'POST',
+                    url: "http://localhost:3000/products",
+                    body: { name: 'String', price: 'String'}
+                }
             });
         })
         .catch(err => {
