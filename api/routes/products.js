@@ -96,10 +96,33 @@ router.post('/', (req, res) => {
 });
 
 // update
-router.patch('/', (req, res) => {
-    res.status(200).json({
-        msg: 'Successful patch products'
-    });
+router.patch('/:productId', (req, res) => {
+    const id = req.params.productId;
+
+    const updateOps = {};
+    //for문 req.body(사용자입력값)수 대로 ops로 넘어가면서 실행
+    for (const ops of req.body) {
+        updateOps[ops.propName] = ops.value; //name의 속성값이 바뀌는 것(바뀐 값이 updateOps로 들어감)
+    }
+
+
+    productModel
+        .update({_id: id}, { $set: updateOps}) //$set에 updataops값을 넣어주는것
+        .then( result => {
+            res.status(200).json({
+                msg: 'Successful update data'
+            });
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            });
+        });
+
+
+    // res.status(200).json({
+    //     msg: 'Successful patch products'
+    // });
 });
 
 //delete
