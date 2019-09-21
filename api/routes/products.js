@@ -4,7 +4,7 @@ const router = express.Router();
 const productModel = require('../models/product'); //../(..cd)와 ./(같은레벨의 파일)
 
 
-// read(2)
+// total read(2)
 router.get('/', (req, res) => { //=>진행하겠다는 뜻
     productModel
         .find()
@@ -25,6 +25,41 @@ router.get('/', (req, res) => { //=>진행하겠다는 뜻
    //     message: 'Handling GET requests to /products'
    // });
 });
+
+//detail product read
+
+router.get('/:productId', (req,res) => { //: 사용자 요청에 의한 ProductId
+    const id = req.params.productId; //사용자 입력값이 있을경우에 url의 뒷부분이 parameters(localhost:3000/products/productId)
+    productModel
+        .find({_id: id}) //id값에 맞는 것을 화면에 뿌려줌
+        .then(doc => {
+            if(doc.length > 0){ //doc에 데이터가 있다면 실행
+                res.status(200).json({
+                    msg: 'Successful detail data',
+                    productInfo: doc
+                });
+
+
+            } else { //doc에 데이터가 없다면 실행
+                res.json({
+                    msg: 'no product id'
+                });
+            }
+        })
+        .catch(err => {
+            res.json({
+                error: err
+            });
+        });
+
+});
+
+
+
+
+
+
+
 
 // create(1)
 router.post('/', (req, res) => {
