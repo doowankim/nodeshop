@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 
-
+const userRoutes = require('./api/routes/user');
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
 
@@ -20,9 +20,11 @@ mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true})
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false})); //bodyparser 사용자 입력값을 쉽게 만들어주는 것
+
+// Routes
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
-
+app.use('/user', userRoutes);
 
 
 
