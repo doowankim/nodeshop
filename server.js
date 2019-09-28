@@ -11,9 +11,9 @@ const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
 
 
-const db = 'mongodb://teddykwak:k9915402@ds141294.mlab.com:41294/node-rest-shop';
-//const db = 'mongodb+srv://doowankim:qwer1234@cluster0-m6o3g.mongodb.net/test?retryWrites=true&w=majority';
-mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true})
+// const db = 'mongodb://teddykwak:k9915402@ds141294.mlab.com:41294/node-rest-shop';
+const db = 'mongodb+srv://doowankim:qwer1234@cluster0-m6o3g.mongodb.net/test?retryWrites=true&w=majority';
+mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
     .then(() => console.log("MongoDB Connected..."))//성공했을 경우
     .catch(err => console.log(err));//실패했을 경우 에러를 잡는다
 

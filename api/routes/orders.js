@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const orderModel = require('../models/order'); //여기서 저장된 데이터는 ordermodel에 저장
 const productModel = require('../models/product');
-
+const checkAuth = require('../middleware/check-auth');
 
 
 //total read (2)
-router.get('/',(req, res) =>{
+router.get('/',checkAuth, (req, res) =>{
     orderModel
         .find()
         .then(docs => {
@@ -34,7 +34,7 @@ router.get('/',(req, res) =>{
 });
 
 // detail read (3)
-router.get('/:orderId',(req, res) => { // 한개의 데이터만 불러오는 것
+router.get('/:orderId', checkAuth, (req, res) => { // 한개의 데이터만 불러오는 것
     const id = req.params.orderId;
     orderModel
         .findById(id)
@@ -69,7 +69,7 @@ router.get('/:orderId',(req, res) => { // 한개의 데이터만 불러오는 �
 });
 
 // create (1)
-router.post('/',(req, res) =>{
+router.post('/',checkAuth, (req, res) =>{
     productModel
         .findById(req.body.product) //.findById : product ID를 검색
         .then(product => {
@@ -125,7 +125,7 @@ router.post('/',(req, res) =>{
 
 
 // update
-router.patch('/:orderId',(req, res) => {
+router.patch('/:orderId', checkAuth, (req, res) => {
     const id = req.params.orderId;
     const updateOps = {};
 
@@ -153,7 +153,7 @@ router.patch('/:orderId',(req, res) => {
 
 
 // delete
-router.delete('/:orderId',(req, res) => {
+router.delete('/:orderId',checkAuth, (req, res) => {
     orderModel
         .remove({
             _id: req.params.orderId

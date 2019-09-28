@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 //camel naming(중간에 대문자)
 const productModel = require('../models/product'); //../(..cd)와 ./(같은레벨의 파일)
-
+const checkAuth = require('../middleware/check-auth');
 
 // total read(2)
 router.get('/', (req, res) => { //=>진행하겠다는 뜻
@@ -37,7 +37,7 @@ router.get('/', (req, res) => { //=>진행하겠다는 뜻
 
 //detail product read
 
-router.get('/:productId', (req,res) => { //: 사용자 요청에 의한 ProductId
+router.get('/:productId', checkAuth, (req,res) => { //: 사용자 요청에 의한 ProductId
     const id = req.params.productId; //사용자 입력값이 있을경우에 url의 뒷부분이 parameters(localhost:3000/products/productId)
     productModel
         .findById(id)//find(): 배열로 받아옴, findById():
@@ -94,7 +94,7 @@ router.get('/:productId', (req,res) => { //: 사용자 요청에 의한 ProductI
 });
 
 // create(1)
-router.post('/', (req, res) => {
+router.post('/', checkAuth, (req, res) => {
 
     const product = new productModel({
         name: req.body.name,
