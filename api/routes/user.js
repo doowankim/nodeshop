@@ -4,6 +4,26 @@ const router = express.Router();
 const userModel = require('../models/users');
 const bcryptjs = require('bcryptjs');
 
+// 전체유저 불러오기(숙제)
+router.get('/', (req, res) => {
+    userModel
+        .find() //find는 배열로 들어온다
+        .then(users => {
+            res.status(200).json({
+                msg: 'Successful user data',
+                users: users
+            });
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            });
+        });
+});
+
+
+
+
 // user sign up
 router.post('/signup',(req, res) => { //구분짓기위해 ''사이에 도메인을 넣음(회원가입, 로그인 둘다 post이기 때문에)
 
@@ -61,7 +81,66 @@ router.post('/signup',(req, res) => { //구분짓기위해 ''사이에 도메인
 
 // user login
 router.post('/login',(req, res) => {
+    //데이터베이스에 유저모델이 있는지 없는지 확인 -> 패스워드 매칭 => 화면에 뿌려줌
+    userModel
+        .find({email: req.body.email})
+        .exec()
+        .then(user => {
+            // email이 있는지 없는지 확인
+            if(user.length < 1){
+                return res.status(400).json({
+                    msg: 'none email info'
+                });
+            } else {
+                // 패스워드 매칭
+                bcryptjs.compare(req.body.password, user[0].password, (err, result) => {
+                    //req.body.password(사용자 입력값)과 user[0].password(첫번째 object의 패스워드)를 비교해서 err(실패)나 result(비교값)으로 넘어감
+                    if(err) {
+                        return res.status(400).json({
+                            msg: 'password incorrect'
+                        });
+                    }
 
+                    console.log(result);
+                    if(result) {
+                        res.status(200).json({
+                            msg: 'Successful login'
+                        });
+                    }
+                    res.status(401).json({
+                        msg: 'Auth failed'
+                    });
+
+                })
+            }
+
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+            });
+        });
+
+});
+
+
+// user delete
+router.delete('/:userId',(req, res) => {
+    userModel
+        .remove({_id: req.params.userId})
+        .exec()
+        .then(result => {
+            res.status(200).json({
+                msg: 'Successful delete id'
+
+            });
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: err
+
+            });
+        });
 });
 
 module.exports = router;

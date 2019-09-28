@@ -17,6 +17,19 @@ mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => console.log("MongoDB Connected..."))//성공했을 경우
     .catch(err => console.log(err));//실패했을 경우 에러를 잡는다
 
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    );
+    if (req.method === "OPTIONS") {
+        res.header("Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET");
+        return res.status(200).json({});
+    }
+    next();
+});
+
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false})); //bodyparser 사용자 입력값을 쉽게 만들어주는 것
@@ -26,7 +39,20 @@ app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
 app.use('/user', userRoutes);
 
+app.use((req, res, next) => {
+    const error = new Error("Not found");
+    error.status = 404;
+    next(error);
+})
 
+app.use((error, req, res, next) => {
+    res.status(error.status || 500);
+    res.json({
+        error: {
+            message: error.message
+        }
+    });
+});
 
 const PORT = 3000; //1000~9999
 const server = http.createServer(app);
