@@ -3,6 +3,7 @@ const router = express.Router();
 // sign up, login...등록
 const userModel = require('../models/users');
 const bcryptjs = require('bcryptjs');
+const jwt = require('jsonwebtoken'); //인증코드발행 관련
 
 // 전체유저 불러오기(숙제)
 router.get('/', (req, res) => {
@@ -81,7 +82,7 @@ router.post('/signup',(req, res) => { //구분짓기위해 ''사이에 도메인
 
 // user login
 router.post('/login',(req, res) => {
-    //데이터베이스에 유저모델이 있는지 없는지 확인 -> 패스워드 매칭 => 화면에 뿌려줌
+    //데이터베이스에 유저모델이 있는지 없는지 확인 -> 패스워드 매칭 => jsonwebtoken을 발행하고 => 화면에 뿌려줌
     userModel
         .find({email: req.body.email})
         .exec()
@@ -103,8 +104,19 @@ router.post('/login',(req, res) => {
 
                     console.log(result);
                     if(result) {
+
+                        // jsonwebtoken 만들기
+                        const token = jwt.sign({
+                            email: user[0].email,
+                            userId: user[0]._id
+                        },
+                        "secret", {expiresIn: "1h"} // secret: 암구어 같은거(꼭 필요) expiresIn: "1h" 1시간동안 토큰이 유효함, 시간지나면 없어짐
+                        );
+
                         res.status(200).json({
-                            msg: 'Successful login'
+                            msg: 'Successful login',
+                            tokeninfo: token
+
                         });
                     }
                     res.status(401).json({
