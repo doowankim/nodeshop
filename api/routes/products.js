@@ -40,15 +40,19 @@ router.get('/', (req, res) => { //=>진행하겠다는 뜻
 router.get('/:productId', (req,res) => { //: 사용자 요청에 의한 ProductId
     const id = req.params.productId; //사용자 입력값이 있을경우에 url의 뒷부분이 parameters(localhost:3000/products/productId)
     productModel
-        .find({_id: id}) //id값에 맞는 것을 화면에 뿌려줌
-        .then(doc => {
-            if(doc.length > 0){ //doc에 데이터가 있다면 실행
+        .findById(id)//find(): 배열로 받아옴, findById():
+        .exec()
+        //id값에 맞는 것을 화면에 뿌려줌
+        .then(doc => { //then()은 실행하는 것
+            if(doc){ //doc에 데이터가 있다면 실행
                 res.status(200).json({
                     msg: 'Successful detail data',
+                    // productInfo: doc
+
                     productInfo: {
                         name: doc.name,
                         price: doc.price,
-                        _id: doc._id,
+                        id: doc._id,
                         request: { //상세페이지랑 전체페이지 왔다갔다하는 것을 자동화 시킨것
                             type: 'GET',
                             url: "http://localhost:3000/products/"
@@ -63,20 +67,31 @@ router.get('/:productId', (req,res) => { //: 사용자 요청에 의한 ProductI
                 });
             }
         })
-        .catch(err => {
+        .catch(err => { //catch()는 에러가 있을 경우 실행하는 것
             res.json({
                 error: err
             });
         });
-
+    // const id = req.params.productId;
+    // productModel.findById(id)
+    //     .exec()
+    //     .then(doc => {
+    //         console.log("From database", doc);
+    //         if (doc) {
+    //             res.status(200).json(doc);
+    //         } else {
+    //             res
+    //                 .status(404)
+    //                 .json({ message: "No valid entry found for provided ID" });
+    //         }
+    //     })
+    //     .catch(err => {
+    //         console.log(err);
+    //         res.status(500).json({
+    //             error: err
+    //         });
+    //     })
 });
-
-
-
-
-
-
-
 
 // create(1)
 router.post('/', (req, res) => {
@@ -107,17 +122,6 @@ router.post('/', (req, res) => {
                 error: err  //(error)는 본인이 정하는 것 err는 서버에서 내려주는 것
             })
         }); //const product에 에러가 났을경우에 catch에서 실행
-
-    // const product = {
-    //     name2: req.body.name,
-    //     price2: req.body.price
-    // };
-    //
-    //
-    // res.status(200).json({
-    //     msg: 'Successful post products',
-    //     createdProduct: product
-    // });
 });
 
 // update
@@ -147,11 +151,6 @@ router.patch('/:productId', (req, res) => {
                 error: err
             });
         });
-
-
-    // res.status(200).json({
-    //     msg: 'Successful patch products'
-    // });
 });
 
 //delete
@@ -175,10 +174,6 @@ router.delete('/:productId', (req, res) => {
                 error: err
             });
         });
-
-    // res.status(200).json({
-    //     msg: 'Successful delete products'
-    // });
 });
 
 
