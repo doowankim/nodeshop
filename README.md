@@ -1,7 +1,8 @@
 # 쇼핑몰 제작
 
 ## Tool
-* 사용 언어 : node.js
+* Language & Framework : Node.js, Express.js
+* Database : MongoDB
 
 ## 기획
 
